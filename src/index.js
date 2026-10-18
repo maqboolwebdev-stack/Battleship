@@ -1,5 +1,5 @@
 // src/index.js
-import './styles.css'
+import "./styles.css";
 import catImage from "./images.jpeg";
 import { greeting } from "./greeting.js";
 
