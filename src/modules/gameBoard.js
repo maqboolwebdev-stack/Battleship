@@ -6,6 +6,32 @@ export class GameBoard {
     this.ships = [];
   }
 
+  canPlaceShip(ship, startCoord, direction) {
+    const [row, col] = startCoord;
+
+    for (let i = 0; i < ship.length; i++) {
+      let r = row;
+      let c = col;
+
+      if (direction === "horizontal") {
+        c += i;
+      } else {
+        r += i;
+      }
+
+      // 1. Board ki limit (0 to 9)
+      if (r < 0 || r > 9 || c < 0 || c > 9) {
+        return false;
+      }
+
+      const key = `${r},${c}`;
+      if (this.grid.has(key)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   placeShip(ship, startCoord, direction = "horizontal") {
     const [row, col] = startCoord;
 
@@ -39,7 +65,7 @@ export class GameBoard {
 
     if (ship) {
       ship.hit();
-      this.hitAttacks.push(coord)
+      this.hitAttacks.push(coord);
     } else {
       this.missedAttacks.push(coord);
     }
