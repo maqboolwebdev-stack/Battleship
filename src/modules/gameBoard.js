@@ -2,6 +2,7 @@ export class GameBoard {
   constructor() {
     this.grid = new Map();
     this.missedAttacks = [];
+    this.hitAttacks = []; // this array will track successful attack
     this.ships = [];
   }
 
@@ -38,6 +39,7 @@ export class GameBoard {
 
     if (ship) {
       ship.hit();
+      this.hitAttacks.push(coord)
     } else {
       this.missedAttacks.push(coord);
     }
