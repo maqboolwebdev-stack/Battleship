@@ -4,7 +4,7 @@ import { renderBoard } from './domController.js';
 
 let player, computer;
 let isGameOver = false;
-let currentTurn = 'player'; // this variable will track whose turn it is
+let currentTurn = 'player';
 
 export function initGame() {
     player = new Player('real');
@@ -12,21 +12,18 @@ export function initGame() {
     isGameOver = false;
     currentTurn = 'player';
 
-    const playerShip1 = new Ship(3);
-    const playerShip2 = new Ship(2);
-    player.gameBoard.placeShip(playerShip1, [0, 0], 'horizontal');
-    player.gameBoard.placeShip(playerShip2, [2, 0], 'vertical');
-
-    placeComputerShips();
+    // 1. Player aur Computer dono ke liye 5 ships randomly place karein
+    placeShipsRandomly(player);
+    placeShipsRandomly(computer);
 
     const statusDiv = document.getElementById('game-status');
-    statusDiv.textContent = "Game Started! Your Turn.";
+    statusDiv.textContent = "Game Started! Your Turn. Click on Computer Board.";
 
-    setupEventListeners();
     refreshBoards();
 }
 
-function placeComputerShips() {
+// Dono players ke liye reusable random ship placement function
+function placeShipsRandomly(playerInstance) {
     const shipLengths = [5, 4, 3, 3, 2]; // Full Fleet
 
     shipLengths.forEach(length => {
@@ -39,8 +36,8 @@ function placeComputerShips() {
             const ship = new Ship(length);
 
             try {
-                if (computer.gameBoard.canPlaceShip(ship, [row, col], direction)) {
-                    computer.gameBoard.placeShip(ship, [row, col], direction);
+                if (playerInstance.gameBoard.canPlaceShip(ship, [row, col], direction)) {
+                    playerInstance.gameBoard.placeShip(ship, [row, col], direction);
                     placed = true;
                 }
             } catch (e) {
@@ -81,9 +78,12 @@ function computerPlay() {
     refreshBoards();
 }
 
-function setupEventListeners() {
+// Event Listeners setup
+export function setupEventListeners() {
     const computerContainer = document.getElementById('computer-board');
+    const restartBtn = document.getElementById('restart-btn');
 
+    // Computer Board Click Event
     computerContainer.addEventListener('click', (e) => {
         if (isGameOver || currentTurn !== 'player') return;
 
@@ -100,7 +100,6 @@ function setupEventListeners() {
 
         if (alreadyAttacked) return;
 
-        // Player attack on computer board
         computer.gameBoard.receiveAttack(coord);
 
         const statusDiv = document.getElementById('game-status');
@@ -111,7 +110,6 @@ function setupEventListeners() {
             return;
         }
 
-        // Turn switch to computer, player clicks are now blocked
         currentTurn = 'computer';
         statusDiv.textContent = "Computer's Turn...";
         refreshBoards();
@@ -119,5 +117,10 @@ function setupEventListeners() {
         setTimeout(() => {
             computerPlay();
         }, 500);
+    });
+
+    // Restart Button Event
+    restartBtn.addEventListener('click', () => {
+        initGame();
     });
 }
