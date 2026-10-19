@@ -1,3 +1,5 @@
+import { SHIP_COLORS } from './ship-colors.js';
+
 export function renderBoard(
   gameBoardInstance,
   container,
@@ -49,7 +51,7 @@ export function renderBoard(
       }
 
       if (ship && !isEnemy && !isHit) {
-        cell.style.backgroundColor = "#8fbc8f";
+        cell.style.backgroundColor = SHIP_COLORS[ship.length] ||"#8fbc8f";
       }
 
       container.appendChild(cell);
