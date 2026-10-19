@@ -1,5 +1,5 @@
-// src/index.js
-import './styles.css';
-import { greeting } from './greeting.js';
+import './styles/styles.css';
+import { initGame } from './modules/gameController.js';
 
-console.log(greeting);
+// initialize the game
+initGame();
